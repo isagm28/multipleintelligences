@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Intelligences Test | Discover Your Gifts</title>
+    <!-- Optimized Typography (Inter & Outfit) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- PDF Export Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-gradient: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --border-color: #e5e7eb;
+            --radius: 16px;
+            --shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .header-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .question-card:hover {
+            border-color: var(--primary);
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+        }
+
+        .question-card.selected {
+            background: #eef2ff;
+            border-color: var(--primary);
+        }
+
+        .question-card input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-main);
+            flex-grow: 1;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Results Section */
+        #results-section {
+            display: none;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-header h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .intelligence-box {
+            background: #f8fafc;
+            border-left: 5px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .intelligence-box h3 {
+            font-size: 1.3rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .intelligence-box p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+
+        .score-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .actions .btn {
+            margin-top: 0;
+        }
+
+        .btn-secondary {
+            background: #475569;
+            box-shadow: 0 4px 14px rgba(71, 85, 105, 0.3);
+        }
+        .btn-secondary:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="pdf-content">
+        <!-- TEST SECTION -->
+        <div id="test-section">
+            <div class="header-section">
+                <h1>Discover Your Gifts & Talents</h1>
+                <p>Check any items that seem to apply to you. This is not a test—it's just for your own information to help you discover your unique learning style!</p>
+            </div>
+            
+            <form id="mi-form">
+                <div id="questions-container"></div>
+                <button type="button" class="btn" onclick="calculateResults()">See My Results!</button>
+            </form>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <div id="results-section">
+            <div class="results-header">
+                <h2>Your Top Intelligences!</h2>
+                <p>Here is the breakdown of your strongest learning preferences based on your unique profile:</p>
+            </div>
+
+            <div id="definitions-container"></div>
+
+            <div class="actions">
+                <button type="button" class="btn btn-secondary" onclick="resetTest()">Retake Test</button>
+                <button type="button" class="btn" onclick="exportPDF()">Export to PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Questions mapping to columns 1 to 8 based on the original tally sheet
+        const questionsData = [
+            { id: 1, text: "I enjoy reading books.", col: 1 },
+            { id: 2, text: "I have always liked math and science classes best and I do well in them.", col: 2 },
+            { id: 3, text: "I enjoy drawing, painting and doodling.", col: 3 },
+            { id: 4, text: "I love being outdoors and enjoy spending my free time outside.", col: 8 },
+            { id: 5, text: "I have a pleasant singing voice and I like to sing.", col: 5 },
+            { id: 6, text: "I'm the kind of person others come to for advice.", col: 6 },
+            { id: 7, text: "I have some important goals for my life that I think about often.", col: 7 },
+            { id: 8, text: "I love animals and I spend a lot of time with them.", col: 8 },
+            { id: 9, text: "I like English, social studies and history better than math and science.", col: 1 },
+            { id: 10, text: "I try to look for patterns and regularities in things, such as every third stair on the staircase has a notch in it.", col: 2 },
+            { id: 11, text: "I like to figure out how to take apart and put back together things like toys and puzzles.", col: 4 },
+            { id: 12, text: "I am an active person and if I can't move around I get bored.", col: 4 },
+            { id: 13, text: "I frequently listen to music because I enjoy it so much.", col: 5 },
+            { id: 14, text: "I like going to parties and social events.", col: 6 },
+            { id: 15, text: "I think I am a very independent person.", col: 7 },
+            { id: 16, text: "I enjoy watching nature shows on television like the Discovery Channel, National Geographic and Nova.", col: 8 },
+            { id: 17, text: "I am good at using words to get others to change their mind.", col: 1 },
+            { id: 18, text: "I enjoy playing around with a chemistry set and am interested in new discoveries in science.", col: 2 },
+            { id: 19, text: "When I watch a movie or video, I am more interested in what I see than what I hear.", col: 3 },
+            { id: 20, text: "I think I am well coordinated.", col: 4 },
+            { id: 21, text: "I can play a musical instrument.", col: 5 },
+            { id: 22, text: "I don't like to argue with people.", col: 6 },
+            { id: 23, text: "Sometimes I talk to myself.", col: 7 },
+            { id: 24, text: "It's fun to watch birds or other animals, to watch their habits, and to learn more about them.", col: 8 },
+            { id: 25, text: "I'm good at Scrabble and other word games.", col: 1 },
+            { id: 26, text: "I believe that almost everything has a logical explanation.", col: 2 },
+            { id: 27, text: "When I close my eyes, sometimes I can see clear images in my head that seem real.", col: 3 },
+            { id: 28, text: "I have good skills in one or more sports and learn new sports quickly.", col: 4 },
+            { id: 29, text: "I can easily keep time to a piece of music.", col: 5 },
+            { id: 30, text: "I enjoy getting other people to work together.", col: 6 },
+            { id: 31, text: "I like to spend time alone thinking about things that are important to me.", col: 7 },
+            { id: 32, text: "I'm very good at telling the difference between different kinds of birds, dogs, trees and stuff like that.", col: 8 },
+            { id: 33, text: "I like to learn new words and know their meanings.", col: 1 },
+            { id: 34, text: "I like to play games and solve brainteasers that require tactics and strategy.", col: 2 },
+            { id: 35, text: "I am good at reading maps and finding my way around unfamiliar places.", col: 3 },
+            { id: 36, text: "I don't like organized team sports as much as individual sports activities, such as tennis, swimming, skiing, golf or ballet.", col: 4 },
+            { id: 37, text: "I know the tunes and titles of many songs and musical pieces.", col: 5 },
+            { id: 38, text: "I consider myself a leader (and others call me that).", col: 6 },
+            { id: 39, text: "I would rather spend a vacation in a cabin in the woods than at a fancy resort.", col: 8 },
+            { id: 40, text: "I enjoy visiting zoos, natural history museums or other places where the world is studied.", col: 8 },
+            { id: 41, text: "It's easy for me to memorize things at school.", col: 1 },
+            { id: 42, text: "It is fun for me to work with numbers and data.", col: 2 },
+            { id: 43, text: "I like some colors better than others.", col: 3 },
+            { id: 44, text: "I don't mind getting my hands dirty from activities like painting, clay, or fixing and building things.", col: 4 },
+            { id: 45, text: "Sometimes I catch myself walking along with a television jingle or song in my mind.", col: 5 },
+            { id: 46, text: "When I have a problem, I'll probably ask a friend for help.", col: 6 },
+            { id: 47, text: "I think I know what I am good at and what I'm not so good at doing.", col: 7 },
+            { id: 48, text: "I like being outside whenever possible; I feel confident and comfortable there.", col: 8 },
+            { id: 49, text: "I like to look things up in the dictionary or any encyclopedia.", col: 1 },
+            { id: 50, text: "I like to ask people questions about how things work or why nature is the way it is.", col: 2 },
+            { id: 51, text: "I sketch or draw when I think.", col: 3 },
+            { id: 52, text: "Sometimes when I talk with people, I gesture with my hands.", col: 4 },
+            { id: 53, text: "I like to make up my own tunes and melodies.", col: 5 },
+            { id: 54, text: "I have at least three close friends.", col: 6 },
+            { id: 55, text: "I have hobbies and interests that I prefer to do on my own.", col: 7 },
+            { id: 56, text: "I like camping and hiking.", col: 8 },
+            { id: 57, text: "I like to talk to friends and family better than watching TV.", col: 6 },
+            { id: 58, text: "I have an easy time understanding new math concepts in school.", col: 2 },
+            { id: 59, text: "I enjoy reading things more when they have lots of pictures and drawings.", col: 3 },
+            { id: 60, text: "I would rather play a sport than watch it.", col: 4 },
+            { id: 61, text: "Often I keep time to music by tapping to the beat or humming the tune when I am studying or talking on the phone.", col: 5 },
+            { id: 62, text: "I am easy to get to know.", col: 6 },
+            { id: 63, text: "I want to be self-employed or maybe start my own business.", col: 7 },
+            { id: 64, text: "I want to become a volunteer in an ecological organization (such as Greenpeace or Sierra Club) to help save nature from further destruction.", col: 8 },
+            { id: 65, text: "I like to write things like stories, poems and reports.", col: 1 },
+            { id: 66, text: "I like things better when they are organized, categorized or measured.", col: 2 },
+            { id: 67, text: "I am good at playing Pictionary, doing jigsaw puzzles, and solving mazes.", col: 3 },
+            { id: 68, text: "I like to \"ham it up\" in skits, plays, speeches, sports or other types of activities.", col: 4 },
+            { id: 69, text: "I can tell when notes are off-key.", col: 5 },
+            { id: 70, text: "I feel comfortable most of the time, even in the midst of a crowd.", col: 6 },
+            { id: 71, text: "I like to spend time by myself thinking about thing that I value.", col: 7 },
+            { id: 72, text: "When I was younger I used to dislodge big rocks from the ground to discover the living things underneath.", col: 8 },
+            { id: 73, text: "I'm really good at describing things in words.", col: 1 },
+            { id: 74, text: "I think I am good at working with numbers and data.", col: 2 },
+            { id: 75, text: "I am better at remembering faces than names.", col: 3 },
+            { id: 76, text: "I like working with my hands in activities such as sewing, carving, or model-building.", col: 4 },
+            { id: 77, text: "I know what I like and don't like in music.", col: 5 },
+            { id: 78, text: "I am good at making new friends.", col: 6 },
+            { id: 79, text: "I like to think about things before I take any action.", col: 7 },
+            { id: 80, text: "I have a green thumb and I am really good at keeping plants alive and healthy.", col: 8 }
+        ];
+
+        // Definitions extracted from Logical-mathematical intelligence document
+        const intelligenceInfo = {
+            1: {
+                name: "Linguistic Intelligence",
+                desc: "It is related to the ability to express oneself effectively, either orally or in writing. People with this type of intelligence excel in reading, storytelling, creative writing, or learning languages."
+            },
+            2: {
+                name: "Logical-Mathematical Intelligence",
+                desc: "It is the one most associated with abstract reasoning, problem solving, logic, and scientific thinking. Students with this developed intelligence enjoy numbers, patterns, and challenges that involve analysis and deduction."
+            },
+            3: {
+                name: "Spatial Intelligence",
+                desc: "It is linked to the ability to think in three dimensions, visualize objects, and create mental representations. Students with this profile usually enjoy drawing, design, architecture, or construction games."
+            },
+            4: {
+                name: "Kinaesthetic Intelligence",
+                desc: "It is related to the use of the body to express oneself or solve problems. Children with this type of intelligence learn better through movement, physical practice, and tactile experimentation. They often stand out in sports, dance, or performing arts."
+            },
+            5: {
+                name: "Musical Intelligence",
+                desc: "It refers to sensitivity to sounds, rhythms, melodies, and tone. These students find it easy to play instruments, sing, compose, or quickly recognize musical structures."
+            },
+            6: {
+                name: "Interpersonal Intelligence",
+                desc: "It is linked to the ability to understand others, empathize, communicate, and work in teams. These students are often natural leaders, good mediators, and enjoy collaborative activities."
+            },
+            7: {
+                name: "Intrapersonal Intelligence",
+                desc: "It is the ability to know oneself, understand emotions, strengths, and weaknesses. Students with high intrapersonal intelligence show introspection, autonomy, and a clear awareness of their personal goals."
+            },
+            8: {
+                name: "Naturalistic Intelligence",
+                desc: "The last one incorporated by Gardner. It refers to sensitivity towards nature, the environment, and living beings. Students with this intelligence enjoy observing natural phenomena, taking care of animals, and exploring the environment."
+            }
+        };
+
+        // Render questions on page load
+        const container = document.getElementById('questions-container');
+        questionsData.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.onclick = (e) => {
+                if(e.target.tagName !== 'INPUT') {
+                    const checkbox = card.querySelector('input');
+                    checkbox.checked = !checkbox.checked;
+                }
+                card.classList.toggle('selected', card.querySelector('input').checked);
+            };
+
+            card.innerHTML = `
+                <input type="checkbox" id="q${q.id}" name="q" value="${q.col}" onchange="this.closest('.question-card').classList.toggle('selected', this.checked)">
+                <label class="question-text" for="q${q.id}">${q.id}. ${q.text}</label>
+            `;
+            container.appendChild(card);
+        });
+
+        function calculateResults() {
+            const checkboxes = document.querySelectorAll('input[name="q"]:checked');
+            if(checkboxes.length === 0) {
+                alert("Please select at least one option to view your results.");
+                return;
+            }
+
+            // Calculate scores per column
+            const scores = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0};
+            checkboxes.forEach(cb => {
+                scores[cb.value]++;
+            });
+
+            // Sort intelligences by highest score
+            const sortedIntelligences = Object.keys(scores).map(col => {
+                return { col: parseInt(col), score: scores[col] };
+            }).sort((a, b) => b.score - a.score);
+
+            // Display top results
+            const defContainer = document.getElementById('definitions-container');
+            defContainer.innerHTML = '';
+
+            // Retrieve top 3 intelligences
+            const topIntelligences = sortedIntelligences.slice(0, 3);
+
+            topIntelligences.forEach(item => {
+                const info = intelligenceInfo[item.col];
+                const box = document.createElement('div');
+                box.className = 'intelligence-box';
+                box.innerHTML = `
+                    <h3>${info.name} <span class="score-badge">${item.score} matches</span></h3>
+                    <p>${info.desc}</p>
+                `;
+                defContainer.appendChild(box);
+            });
+
+            // View transition
+            document.getElementById('test-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetTest() {
+            document.getElementById('mi-form').reset();
+            document.querySelectorAll('.question-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('test-section').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function exportPDF() {
+            const element = document.getElementById('pdf-content');
+            const options = {
+                margin:       10,
+                filename:     'my-multiple-intelligences-results.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(options).save();
+        }
+    </script>
+</body>
+</html>
